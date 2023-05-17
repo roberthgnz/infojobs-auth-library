@@ -8,15 +8,14 @@
   "files": [
     "dist/**/*"
   ],
-  "dependencies": {
-    "querystring": "^0.2.1"
-  },
   "devDependencies": {
+    "@types/node": "^20.1.7",
     "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "build": "tsup"
+    "build": "tsup",
+    "dev": "tsup --watch"
   },
   "keywords": [],
   "author": "",
