@@ -4,7 +4,7 @@
   "description": "",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
-  "module": "./dist/index.js",
+  "module": "./dist/index.mjs",
   "files": [
     "dist/**/*"
   ],
@@ -12,10 +12,11 @@
     "querystring": "^0.2.1"
   },
   "devDependencies": {
+    "tsup": "^6.7.0",
     "typescript": "^5.0.4"
   },
   "scripts": {
-    "build": "tsc"
+    "build": "tsup"
   },
   "keywords": [],
   "author": "",
