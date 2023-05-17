@@ -1,7 +1,7 @@
 {
   "name": "infojobs-auth-library",
   "version": "1.0.0",
-  "description": "",
+  "description": "InfoJobs API Authentication Client Library for Node.js",
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "module": "./dist/index.mjs",
@@ -17,7 +17,14 @@
     "build": "tsup",
     "dev": "tsup --watch"
   },
-  "keywords": [],
-  "author": "",
-  "license": "ISC"
+  "keywords": [
+    "infojobs",
+    "api",
+    "infojobs apis",
+    "client",
+    "client library"
+  ],
+  "repository": "roberthgnz/infojobs-auth-library.git",
+  "author": "Roberth González <@roberthgnz>",
+  "license": "MIT"
 }
