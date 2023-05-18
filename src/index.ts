@@ -27,8 +27,8 @@ export interface AccessTokenError {
 
 const ERROR_INVALID_OAUTH2_OPTIONS =
   'Invalid OAuth2 options. Please provide a valid clientId, clientSecret and redirectUri';
-  
-const ERROR_INVALID_AUTH_URL_OPTIONS = 'Invalid Auth URL options.'
+
+const ERROR_INVALID_AUTH_URL_OPTIONS = 'Invalid Auth URL options.';
 
 export class OAuth2 {
   private static readonly API_URL = 'https://www.infojobs.net/api';
@@ -50,14 +50,14 @@ export class OAuth2 {
 
   #hasValidOAuth2ClientOptions(options?: Partial<OAuth2ClientOptions>, needSecret = true) {
     if (options) {
-      return options.clientId && (needSecret ? options.clientSecret : true) && options.redirectUri
+      return options.clientId && (needSecret ? options.clientSecret : true) && options.redirectUri;
     }
 
-    return this._clientId && (needSecret ? this._clientSecret : true) && this._redirectUri
+    return this._clientId && (needSecret ? this._clientSecret : true) && this._redirectUri;
   }
 
   #hasValidAuthUrlOptions(options: GenerateAuthUrlOptions) {
-    return options?.responseType && options?.scope
+    return options?.responseType && options?.scope;
   }
 
   /**
