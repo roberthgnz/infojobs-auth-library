@@ -8,8 +8,6 @@ export interface OAuth2ClientOptions {
 
 export interface GenerateAuthUrlOptions {
   scope: string[] | string;
-  clientId?: string;
-  redirectUri?: string;
   responseType: string;
   state?: string;
 }
@@ -29,6 +27,8 @@ export interface AccessTokenError {
 
 const ERROR_INVALID_OAUTH2_OPTIONS =
   'Invalid OAuth2 options. Please provide a valid clientId, clientSecret and redirectUri';
+  
+const ERROR_INVALID_AUTH_URL_OPTIONS = 'Invalid Auth URL options.'
 
 export class OAuth2 {
   private static readonly API_URL = 'https://www.infojobs.net/api';
@@ -39,24 +39,32 @@ export class OAuth2 {
   private _redirectUri: string;
 
   constructor(options: OAuth2ClientOptions) {
+    if (!this.#hasValidOAuth2ClientOptions(options)) {
+      throw new Error(ERROR_INVALID_OAUTH2_OPTIONS);
+    }
+
     this._clientId = options.clientId;
     this._clientSecret = options.clientSecret;
     this._redirectUri = options.redirectUri;
   }
 
-  #hasValidOptions(options?: any, needSecret = true) {
+  #hasValidOAuth2ClientOptions(options?: Partial<OAuth2ClientOptions>, needSecret = true) {
     if (options) {
-      return options.client_id && (needSecret ? options.client_secret : true) && options.redirect_uri;
+      return options.clientId && (needSecret ? options.clientSecret : true) && options.redirectUri
     }
 
-    return this._clientId && (needSecret ? this._clientSecret : true) && this._redirectUri;
+    return this._clientId && (needSecret ? this._clientSecret : true) && this._redirectUri
+  }
+
+  #hasValidAuthUrlOptions(options: GenerateAuthUrlOptions) {
+    return options?.responseType && options?.scope
   }
 
   /**
    * Request OAuth2 access token with the verification code
    */
   async getAccessToken(code: string): Promise<AccessToken | AccessTokenError> {
-    if (!this.#hasValidOptions()) {
+    if (!this.#hasValidOAuth2ClientOptions()) {
       throw new Error(ERROR_INVALID_OAUTH2_OPTIONS);
     }
 
@@ -83,7 +91,7 @@ export class OAuth2 {
    * Request OAuth2 access token with the refresh token
    */
   async refreshAccessToken(refreshToken: string): Promise<AccessToken | AccessTokenError> {
-    if (!this.#hasValidOptions()) {
+    if (!this.#hasValidOAuth2ClientOptions()) {
       throw new Error(ERROR_INVALID_OAUTH2_OPTIONS);
     }
 
@@ -110,24 +118,24 @@ export class OAuth2 {
    * Generates the URL for the user to authorize the application
    */
   generateAuthUrl(options: GenerateAuthUrlOptions) {
-    const parameters = {
-      client_id: options.clientId || this._clientId,
-      redirect_uri: options.redirectUri || this._redirectUri,
-      response_type: options.responseType,
-      state: options.state,
-      scope: options.scope,
-    };
-
-    if (!this.#hasValidOptions(parameters, false)) {
+    if (!this.#hasValidOAuth2ClientOptions()) {
       throw new Error(ERROR_INVALID_OAUTH2_OPTIONS);
     }
 
+    if (!this.#hasValidAuthUrlOptions(options)) {
+      throw new Error(ERROR_INVALID_AUTH_URL_OPTIONS);
+    }
+
+    const parameters = {
+      client_id: this._clientId,
+      redirect_uri: this._redirectUri,
+      response_type: options.responseType,
+      scope: options.scope,
+      state: options.state,
+    };
+
     const params = new URLSearchParams(removeEmpty(parameters));
 
-    let url = params.toString();
-
-    url += Array.isArray(parameters.scope) ? `&scope=${parameters.scope.join(',')}` : `&scope=${parameters.scope}`;
-
-    return `${OAuth2.API_URL}/oauth/user-authorize/index.xhtml?${url}`;
+    return `${OAuth2.API_URL}/oauth/user-authorize/index.xhtml?${params.toString()}`;
   }
 }
