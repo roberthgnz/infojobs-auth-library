@@ -42,7 +42,9 @@ const authUrl = auth.generateAuthUrl({
 });
 
 (async () => {
-  const token = await auth.getAccessToken('2e386b32-af9a-4891-8caa-d1e3d7721f2');
+  // IMPORTANT
+  // You need the verification code generated with the dialog url
+  const token = await auth.getAccessToken(code);
 
   console.log(token);
   /**
